@@ -1,0 +1,186 @@
+{
+  "html-has-lang": {
+    "selector": "html",
+    "fixedHtml": "<html lang=\"en\">",
+    "explanation": "Added the lang=\"en\" attribute to the root <html> element so screen readers can pronounce page content using the appropriate language synthesizer and phonetics.",
+    "wcagCriteria": ["3.1.1"],
+    "confidence": 1.0,
+    "needsHumanReview": false
+  },
+  "image-alt": [
+    {
+      "selector": "img[src*='1514432324607']",
+      "fixedHtml": "<img src=\"https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80\" alt=\"Freshly pulled double espresso in a ceramic cup with dense hazelnut crema\">",
+      "explanation": "Added descriptive alternative text explaining the visual contents of the artisanal espresso cup for screen reader users.",
+      "wcagCriteria": ["1.1.1"],
+      "confidence": 0.95,
+      "needsHumanReview": true
+    },
+    {
+      "selector": "img[src*='1509042239860']",
+      "fixedHtml": "<img src=\"https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&auto=format&fit=crop&q=80\" alt=\"Specialty roasted Colombian coffee beans spread across a wooden testing table\">",
+      "explanation": "Added descriptive alternative text for the roasted Colombian beans image.",
+      "wcagCriteria": ["1.1.1"],
+      "confidence": 0.95,
+      "needsHumanReview": true
+    },
+    {
+      "selector": "img[src*='1447933601403']",
+      "fixedHtml": "<img src=\"https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&auto=format&fit=crop&q=80\" alt=\"Organic dark roast Sumatra coffee beans being poured into a grinding hopper\">",
+      "explanation": "Added descriptive alternative text for the organic Sumatra dark roast beans image.",
+      "wcagCriteria": ["1.1.1"],
+      "confidence": 0.95,
+      "needsHumanReview": true
+    }
+  ],
+  "label": [
+    {
+      "selector": "#cust-name",
+      "fixedHtml": "<label for=\"cust-name\" class=\"form-label\">Full Name</label>\n<input type=\"text\" id=\"cust-name\" placeholder=\"Full Name (e.g. Maya Lin)\">",
+      "explanation": "Added an explicit <label> linked via the for attribute to provide an unambiguous programmatic accessible name.",
+      "wcagCriteria": ["1.3.1", "3.3.2", "4.1.2"],
+      "confidence": 0.98,
+      "needsHumanReview": false
+    },
+    {
+      "selector": "#cust-email",
+      "fixedHtml": "<label for=\"cust-email\" class=\"form-label\">Email Address</label>\n<input type=\"email\" id=\"cust-email\" placeholder=\"Email Address (e.g. maya@example.com)\">",
+      "explanation": "Added an explicit <label> linked via the for attribute to guarantee the email field has a persistent accessible name.",
+      "wcagCriteria": ["1.3.1", "3.3.2", "4.1.2"],
+      "confidence": 0.98,
+      "needsHumanReview": false
+    },
+    {
+      "selector": "#cust-phone",
+      "fixedHtml": "<label for=\"cust-phone\" class=\"form-label\">Phone Number</label>\n<input type=\"tel\" id=\"cust-phone\" placeholder=\"Phone Number (e.g. +1 555-0192)\">",
+      "explanation": "Added an explicit <label> linked via the for attribute for phone number input.",
+      "wcagCriteria": ["1.3.1", "3.3.2", "4.1.2"],
+      "confidence": 0.98,
+      "needsHumanReview": false
+    },
+    {
+      "selector": "#cust-notes",
+      "fixedHtml": "<label for=\"cust-notes\" class=\"form-label\">Special Instructions</label>\n<textarea id=\"cust-notes\" rows=\"3\" placeholder=\"Special brewing instructions or delivery preferences\"></textarea>",
+      "explanation": "Added an explicit <label> for the textarea to ensure assistive tech users understand required input.",
+      "wcagCriteria": ["1.3.1", "3.3.2", "4.1.2"],
+      "confidence": 0.98,
+      "needsHumanReview": false
+    }
+  ],
+  "select-name": {
+    "selector": "#grind-selection",
+    "fixedHtml": "<label for=\"grind-selection\" class=\"form-label\">Grind Preference</label>\n<select id=\"grind-selection\">\n  <option value=\"\" disabled selected>Select your preferred grind style</option>\n  <option value=\"whole-bean\">Whole Bean (Optimal freshness)</option>\n  <option value=\"coarse\">Coarse Grind (French Press / Cold Brew)</option>\n  <option value=\"medium\">Medium Grind (Pour Over / Drip)</option>\n  <option value=\"fine\">Fine Grind (Espresso / Moka)</option>\n</select>",
+    "explanation": "Attached an explicit <label> to the <select> element so assistive technologies announce its purpose upon keyboard focus.",
+    "wcagCriteria": ["1.3.1", "4.1.2"],
+    "confidence": 0.98,
+    "needsHumanReview": false
+  },
+  "custom-clickable-non-semantic": {
+    "selector": ".fake-buy-btn",
+    "fixedHtml": "<button type=\"button\" class=\"fake-buy-btn\" onclick=\"alert('Added to cart')\">\n  Buy Now\n</button>",
+    "explanation": "Replaced non-semantic <div onclick> with a native <button> to ensure automatic keyboard focus, Enter/Space activation, and correct role exposure in the accessibility tree.",
+    "wcagCriteria": ["2.1.1", "4.1.2"],
+    "confidence": 1.0,
+    "needsHumanReview": false
+  },
+  "button-name": {
+    "selector": ".hamburger-btn",
+    "fixedHtml": "<button class=\"hamburger-btn\" aria-label=\"Open main navigation menu\" onclick=\"alert('Menu opened')\">\n  <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">\n    <line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"></line>\n    <line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"></line>\n    <line x1=\"3\" y1=\"18\" x2=\"21\" y2=\"18\"></line>\n  </svg>\n</button>",
+    "explanation": "Added aria-label=\"Open main navigation menu\" and marked decorative icon with aria-hidden=\"true\" to provide a distinct accessible name.",
+    "wcagCriteria": ["4.1.2"],
+    "confidence": 0.99,
+    "needsHumanReview": false
+  },
+  "color-contrast": [
+    {
+      "selector": ".low-contrast-notes",
+      "fixedHtml": "<p class=\"low-contrast-notes\" style=\"color: #475569;\">Tasting notes: Jasmine blossoms, candied bergamot, lemon curd, and floral honey finish.</p>",
+      "explanation": "Increased text contrast from 2.3:1 (#aaaaaa) to 5.8:1 (#475569) against the white background, satisfying WCAG AA 4.5:1 minimum.",
+      "wcagCriteria": ["1.4.3"],
+      "confidence": 1.0,
+      "needsHumanReview": false
+    },
+    {
+      "selector": ".yellow-promo-btn",
+      "fixedHtml": "<button class=\"yellow-promo-btn\" style=\"color: #713f12; background-color: #fef08a;\" onclick=\"alert('Promo code applied: SPRING25')\">\n  Special Offer\n</button>",
+      "explanation": "Replaced white text on light yellow with dark amber text (#713f12), achieving a 7.2:1 contrast ratio.",
+      "wcagCriteria": ["1.4.3"],
+      "confidence": 1.0,
+      "needsHumanReview": false
+    }
+  ],
+  "heading-order": {
+    "selector": ".hero h4",
+    "fixedHtml": "<h2>Ethically sourced from sustainable micro-lots across Colombia, Ethiopia, and Sumatra. Freshly roasted every Tuesday.</h2>",
+    "explanation": "Changed <h4> to <h2> directly beneath the <h1> element to re-establish logical structural heading hierarchy.",
+    "wcagCriteria": ["1.3.1", "2.4.6"],
+    "confidence": 0.95,
+    "needsHumanReview": false
+  },
+  "link-name": [
+    {
+      "selector": "a[href='#details-yirgacheffe']",
+      "fixedHtml": "<a href=\"#details-yirgacheffe\" class=\"click-here-link\">view Ethiopian Yirgacheffe cupping report and farm score</a>",
+      "explanation": "Replaced generic 'click here' anchor text with meaningful description that clearly communicates the link's destination out of context.",
+      "wcagCriteria": ["2.4.4", "2.4.9"],
+      "confidence": 0.95,
+      "needsHumanReview": true
+    },
+    {
+      "selector": "a[href='#details-huila']",
+      "fixedHtml": "<a href=\"#details-huila\" class=\"click-here-link\">read Colombian Huila direct trade partnership interview</a>",
+      "explanation": "Replaced generic 'click here' with meaningful link description.",
+      "wcagCriteria": ["2.4.4", "2.4.9"],
+      "confidence": 0.95,
+      "needsHumanReview": true
+    },
+    {
+      "selector": "a[href='#details-sumatra']",
+      "fixedHtml": "<a href=\"#details-sumatra\" class=\"click-here-link\">review Sumatra Mandheling organic certification documents</a>",
+      "explanation": "Replaced generic 'click here' with descriptive link text.",
+      "wcagCriteria": ["2.4.4", "2.4.9"],
+      "confidence": 0.95,
+      "needsHumanReview": true
+    }
+  ],
+  "custom-focus-not-visible": {
+    "selector": "body",
+    "fixedHtml": "<style>\n  :focus-visible { outline: 2px solid #4f46e5 !important; outline-offset: 3px !important; }\n</style>",
+    "explanation": "Removed outline: none on focusable elements and provided a distinct 2px solid high-contrast visible focus ring.",
+    "wcagCriteria": ["2.4.7"],
+    "confidence": 1.0,
+    "needsHumanReview": false
+  },
+  "custom-positive-tabindex": {
+    "selector": ".positive-tab-cta",
+    "fixedHtml": "<button class=\"positive-tab-cta\" onclick=\"alert('Subscribed to newsletter')\">\n  VIP Club\n</button>",
+    "explanation": "Removed positive tabindex=\"5\" so the element receives focus following natural DOM sequence rather than preempting other controls.",
+    "wcagCriteria": ["2.4.3"],
+    "confidence": 1.0,
+    "needsHumanReview": false
+  },
+  "custom-focus-trap": {
+    "selector": "#coffee-club-modal",
+    "fixedHtml": "<div class=\"focus-trap-box\" id=\"coffee-club-modal\">\n  <p style=\"font-weight: 600; color: #1e3a8a; margin-bottom: 0.5rem;\">Join the Aura Coffee Tasting Guild</p>\n  <p style=\"font-size: 0.9rem; color: #475569; margin-bottom: 1rem;\">Experience fresh harvests delivered to your doorstep bi-weekly.</p>\n  <button type=\"button\" class=\"trap-btn\" id=\"trap-btn-1\">Learn Tasting Notes</button>\n  <button type=\"button\" class=\"trap-btn\" id=\"trap-btn-2\">Claim Free Sample</button>\n</div>",
+    "explanation": "Removed artificial keydown trap listener and ensured standard keyboard navigation can freely exit the component.",
+    "wcagCriteria": ["2.1.2"],
+    "confidence": 1.0,
+    "needsHumanReview": false
+  },
+  "table-header": {
+    "selector": ".roast-table",
+    "fixedHtml": "<table class=\"roast-table\">\n  <thead>\n    <tr>\n      <th scope=\"col\">Roast Name</th>\n      <th scope=\"col\">Origin</th>\n      <th scope=\"col\">Roast Level</th>\n      <th scope=\"col\">Recommended Brew</th>\n      <th scope=\"col\">Price</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Aura Light Roast</td>\n      <td>Sidama, Ethiopia</td>\n      <td>City+ (Light)</td>\n      <td>V60 Pour-over, Chemex</td>\n      <td>$22.00 / 250g</td>\n    </tr>\n    <tr>\n      <td>Velvet Medium Roast</td>\n      <td>Antioquia, Colombia</td>\n      <td>Full City (Medium)</td>\n      <td>Aeropress, Drip Machine</td>\n      <td>$19.50 / 250g</td>\n    </tr>\n    <tr>\n      <td>Midnight Dark Roast</td>\n      <td>Sumatra & Java</td>\n      <td>French (Dark)</td>\n      <td>Espresso, Moka Pot, French Press</td>\n      <td>$18.00 / 250g</td>\n    </tr>\n  </tbody>\n</table>",
+    "explanation": "Added semantic <thead> and <th> elements with scope=\"col\" to give tabular data row and column headers.",
+    "wcagCriteria": ["1.3.1"],
+    "confidence": 0.98,
+    "needsHumanReview": false
+  },
+  "duplicate-id": {
+    "selector": "#featured-blend:nth-of-type(2)",
+    "fixedHtml": "<div class=\"coffee-card\" id=\"featured-blend-2\">",
+    "explanation": "Disambiguated duplicate id=\"featured-blend\" by assigning unique identifiers to each card element.",
+    "wcagCriteria": ["4.1.1"],
+    "confidence": 1.0,
+    "needsHumanReview": false
+  }
+}

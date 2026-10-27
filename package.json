@@ -1,0 +1,22 @@
+{
+  "name": "accesslens-ai",
+  "private": true,
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter @accesslens/api --filter @accesslens/web dev",
+    "build": "pnpm -r --filter @accesslens/shared --filter @accesslens/api --filter @accesslens/web build",
+    "lint": "pnpm -r lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:generate": "pnpm --filter @accesslens/api prisma:generate",
+    "db:migrate": "pnpm --filter @accesslens/api prisma:migrate"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^14.2.24",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.20.0"
+  }
+}

@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum ScanInputType {
+  url
+  html
+}
+
+enum IssueImpact {
+  critical
+  serious
+  moderate
+  minor
+}
+
+enum IssueSource {
+  axe
+  custom
+}
+
+enum IssueStatus {
+  open
+  fixed
+  unverified
+  manual
+}
+
+model Scan {
+  id           String        @id @default(cuid())
+  inputType    ScanInputType
+  url          String?
+  html         String?
+  score        Float         @default(0)
+  createdAt    DateTime      @default(now())
+  parentScanId String?
+  parentScan   Scan?         @relation("ScanLineage", fields: [parentScanId], references: [id])
+  childScans   Scan[]        @relation("ScanLineage")
+  issues       Issue[]
+
+  @@index([parentScanId])
+}
+
+model Issue {
+  id       String      @id @default(cuid())
+  scanId   String
+  scan     Scan        @relation(fields: [scanId], references: [id], onDelete: Cascade)
+  ruleId   String
+  impact   IssueImpact
+  wcag     String
+  selector String
+  html     String
+  message  String
+  source   IssueSource
+  status   IssueStatus @default(open)
+  fixes    Fix[]
+
+  @@index([scanId])
+}
+
+model Fix {
+  id               String   @id @default(cuid())
+  issueId          String
+  issue            Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  selector         String
+  originalHtml     String
+  fixedHtml        String
+  explanation      String
+  confidence       Float
+  needsHumanReview Boolean  @default(false)
+  verified         Boolean  @default(false)
+
+  @@index([issueId])
+}

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Brew Artisanal Coffee Roastery</title>
+  <style>
+    /* Global Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #ffffff;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    /* Accessibility Violation #11: outline: none removes all visible focus rings */
+    a, button, input, select, textarea, div[onclick] {
+      outline: none !important;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: #0f172a;
+      color: #ffffff;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #f8fafc;
+    }
+    nav {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    /* Accessibility Violation #6: Icon-only button with no accessible name */
+    .hamburger-btn {
+      background: transparent;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 0.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+      color: #ffffff;
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+    /* Accessibility Violation #9: Heading order skip (h1 -> h4) */
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      letter-spacing: -1px;
+    }
+    .hero h4 {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: #e0e7ff;
+      max-width: 650px;
+      margin: 0 auto 2rem auto;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Accessibility Violation #5: Buy now implemented as <div onclick> with no role or tabindex */
+    .fake-buy-btn {
+      background-color: #6366f1;
+      color: #ffffff;
+      padding: 0.75rem 1.75rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-block;
+      box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.39);
+      transition: background 0.2s;
+    }
+    .fake-buy-btn:hover {
+      background-color: #4f46e5;
+    }
+
+    /* Accessibility Violation #8: White text on light-yellow button (contrast fail: ~1.2:1) */
+    .yellow-promo-btn {
+      background-color: #fef08a;
+      color: #ffffff;
+      border: none;
+      padding: 0.75rem 1.75rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Accessibility Violation #12: Positive tabindex changes natural tab sequence */
+    .positive-tab-cta {
+      background: #4338ca;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* Section layout */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: #0f172a;
+    }
+
+    /* Coffee Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .coffee-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s;
+    }
+    /* Accessibility Violation #2: Images missing alt attribute */
+    .coffee-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+    .coffee-card-body {
+      padding: 1.5rem;
+    }
+    .coffee-card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Accessibility Violation #7: Light gray text (#aaa) on white background (contrast 2.3:1) */
+    .low-contrast-notes {
+      color: #aaaaaa;
+      background-color: #ffffff;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Accessibility Violation #10: Links that say only "click here" */
+    .click-here-link {
+      color: #4f46e5;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* Accessibility Violation #15: Duplicate IDs */
+    /* Two cards will have id="featured-blend" */
+
+    /* Roast Guide Table */
+    /* Accessibility Violation #14: Table without headers (<th>) */
+    .roast-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .roast-table td {
+      padding: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      font-size: 0.95rem;
+    }
+
+    /* Contact & Order Form */
+    .form-wrapper {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 2.5rem;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 3rem auto 0 auto;
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    /* Accessibility Violation #3: Form inputs using placeholder only with no <label> */
+    .form-wrapper input, .form-wrapper textarea, .form-wrapper select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #ffffff;
+    }
+
+    /* Accessibility Violation #13: Modal trap simulation */
+    .focus-trap-box {
+      margin-top: 3rem;
+      padding: 1.5rem;
+      background: #eff6ff;
+      border: 2px dashed #93c5fd;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .trap-btn {
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #3b82f6;
+      background: #ffffff;
+      color: #1d4ed8;
+      cursor: pointer;
+    }
+
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      margin-top: 5rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header>
+    <div class="logo">Aura Brew Coffee</div>
+    <nav>
+      <a href="#roasts">Our Roasts</a>
+      <a href="#guide">Roast Guide</a>
+      <a href="#contact">Contact</a>
+      <!-- Issue 6: Icon-only button with no accessible name -->
+      <button class="hamburger-btn" onclick="alert('Menu opened')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Handcrafted Single-Origin Specialty Coffee</h1>
+    <!-- Issue 9: Heading order skip (h1 directly to h4) -->
+    <h4>Ethically sourced from sustainable micro-lots across Colombia, Ethiopia, and Sumatra. Freshly roasted every Tuesday.</h4>
+    <div class="hero-actions">
+      <!-- Issue 5: Buy now implemented as <div onclick> without role or tabindex -->
+      <div class="fake-buy-btn" onclick="alert('Added to cart')">
+        Buy Now
+      </div>
+      <!-- Issue 8: White text on light yellow button (contrast failure) -->
+      <button class="yellow-promo-btn" onclick="alert('Promo code applied: SPRING25')">
+        Special Offer
+      </button>
+      <!-- Issue 12: positive tabindex="5" -->
+      <button class="positive-tab-cta" tabindex="5" onclick="alert('Subscribed to newsletter')">
+        VIP Club
+      </button>
+    </div>
+  </section>
+
+  <!-- Featured Roasts -->
+  <main class="container" id="roasts">
+    <h2 class="section-title">Featured Micro-Lot Harvests</h2>
+    <div class="cards-grid">
+      
+      <!-- Card 1 -->
+      <!-- Issue 15: Duplicate id attribute (1st instance) -->
+      <div class="coffee-card" id="featured-blend">
+        <!-- Issue 2: Image 1 missing alt attribute -->
+        <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&auto=format&fit=crop&q=80">
+        <div class="coffee-card-body">
+          <h3 class="coffee-card-title">Ethiopian Yirgacheffe G1</h3>
+          <!-- Issue 7: Light gray text (#aaa) on white background -->
+          <p class="low-contrast-notes">Tasting notes: Jasmine blossoms, candied bergamot, lemon curd, and floral honey finish.</p>
+          <!-- Issue 10: Link text says only "click here" (1st instance) -->
+          <p>For detailed cupping scores and farm transparency report, <a href="#details-yirgacheffe" class="click-here-link">click here</a>.</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <!-- Issue 15: Duplicate id attribute (2nd instance) -->
+      <div class="coffee-card" id="featured-blend">
+        <!-- Issue 2: Image 2 missing alt attribute -->
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&auto=format&fit=crop&q=80">
+        <div class="coffee-card-body">
+          <h3 class="coffee-card-title">Colombian Huila Geisha</h3>
+          <!-- Issue 7: Light gray text (#aaa) on white background -->
+          <p class="low-contrast-notes">Tasting notes: Crisp nectarine, dark brown sugar caramel, stone fruit, and silky body.</p>
+          <!-- Issue 10: Link text says only "click here" (2nd instance) -->
+          <p>To read our direct trade partnership interview, <a href="#details-huila" class="click-here-link">click here</a>.</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="coffee-card">
+        <!-- Issue 2: Image 3 missing alt attribute -->
+        <img src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=600&auto=format&fit=crop&q=80">
+        <div class="coffee-card-body">
+          <h3 class="coffee-card-title">Sumatra Mandheling Reserve</h3>
+          <p class="low-contrast-notes">Tasting notes: Cedar smoke, dark cocoa nibs, rich black cardamom, and velvety mouthfeel.</p>
+          <p>To view our organic certification details, <a href="#details-sumatra" class="click-here-link">click here</a>.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Roast Comparison Table -->
+    <!-- Issue 14: Table without headers (<th>) -->
+    <section id="guide" style="margin-top: 4rem;">
+      <h2 class="section-title">Roast Profiles Comparison</h2>
+      <table class="roast-table">
+        <tbody>
+          <tr>
+            <td><strong>Roast Name</strong></td>
+            <td><strong>Origin</strong></td>
+            <td><strong>Roast Level</strong></td>
+            <td><strong>Recommended Brew</strong></td>
+            <td><strong>Price</strong></td>
+          </tr>
+          <tr>
+            <td>Aura Light Roast</td>
+            <td>Sidama, Ethiopia</td>
+            <td>City+ (Light)</td>
+            <td>V60 Pour-over, Chemex</td>
+            <td>$22.00 / 250g</td>
+          </tr>
+          <tr>
+            <td>Velvet Medium Roast</td>
+            <td>Antioquia, Colombia</td>
+            <td>Full City (Medium)</td>
+            <td>Aeropress, Drip Machine</td>
+            <td>$19.50 / 250g</td>
+          </tr>
+          <tr>
+            <td>Midnight Dark Roast</td>
+            <td>Sumatra & Java</td>
+            <td>French (Dark)</td>
+            <td>Espresso, Moka Pot, French Press</td>
+            <td>$18.00 / 250g</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Order & Inquiries Form -->
+    <section id="contact" class="form-wrapper">
+      <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center;">Order Wholesale or Custom Grind</h2>
+      <form onsubmit="event.preventDefault(); alert('Inquiry submitted!');">
+        
+        <!-- Issue 3: 4 form inputs using placeholder only (no <label>) -->
+        <div class="form-group">
+          <input type="text" id="cust-name" placeholder="Full Name (e.g. Maya Lin)">
+        </div>
+        <div class="form-group">
+          <input type="email" id="cust-email" placeholder="Email Address (e.g. maya@example.com)">
+        </div>
+        <div class="form-group">
+          <input type="tel" id="cust-phone" placeholder="Phone Number (e.g. +1 555-0192)">
+        </div>
+        <div class="form-group">
+          <textarea id="cust-notes" rows="3" placeholder="Special brewing instructions or delivery preferences"></textarea>
+        </div>
+
+        <!-- Issue 4: Select with no accessible name -->
+        <div class="form-group">
+          <select id="grind-selection">
+            <option value="" disabled selected>Select your preferred grind style</option>
+            <option value="whole-bean">Whole Bean (Optimal freshness)</option>
+            <option value="coarse">Coarse Grind (French Press / Cold Brew)</option>
+            <option value="medium">Medium Grind (Pour Over / Drip)</option>
+            <option value="fine">Fine Grind (Espresso / Moka)</option>
+          </select>
+        </div>
+
+        <button type="submit" style="width: 100%; background: #0f172a; color: white; padding: 0.85rem; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">
+          Send Roaster Inquiry
+        </button>
+      </form>
+    </section>
+
+    <!-- Issue 13: Focus trap box -->
+    <div class="focus-trap-box" id="coffee-club-modal">
+      <p style="font-weight: 600; color: #1e3a8a; margin-bottom: 0.5rem;">Join the Aura Coffee Tasting Guild</p>
+      <p style="font-size: 0.9rem; color: #475569; margin-bottom: 1rem;">Experience fresh harvests delivered to your doorstep bi-weekly.</p>
+      <button class="trap-btn" id="trap-btn-1">Learn Tasting Notes</button>
+      <button class="trap-btn" id="trap-btn-2">Claim Free Sample</button>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Aura Brew Coffee Roasters. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Issue 13 implementation: traps focus between the two modal buttons when one of them is focused
+    const b1 = document.getElementById('trap-btn-1');
+    const b2 = document.getElementById('trap-btn-2');
+    if (b1 && b2) {
+      b1.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab' && e.shiftKey) {
+          e.preventDefault();
+          b2.focus();
+        }
+      });
+      b2.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab' && !e.shiftKey) {
+          e.preventDefault();
+          b1.focus();
+        }
+      });
+    }
+  </script>
+</body>
+</html>

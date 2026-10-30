@@ -75,6 +75,8 @@ AccessLens AI is a full-stack accessibility testing tool that combines:
 
 ## Quick Start
 
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ### 1. Backend
 
 ```bash
@@ -156,7 +158,7 @@ docker compose up
 
 ## License
 
-This project is licensed under the **MIT License** — an approved OSI open-source license.
+This project is licensed under the **MIT License** ï¿½ an approved OSI open-source license.
 
 ---
 

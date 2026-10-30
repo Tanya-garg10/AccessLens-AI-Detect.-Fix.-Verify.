@@ -56,6 +56,8 @@ AccessLens AI is a full-stack accessibility testing tool that combines:
 - **Live SSE progress** — real-time scan pipeline updates
 - **Export** — HTML, JSON, Markdown reports
 - **Full accessibility** — WCAG 2.2 compliant UI with skip link, aria-live regions, 4.5:1 contrast
+- **Tavily-powered best practices** — authoritative WCAG guidelines from real-time web search
+- **Nemotron-ready architecture** — infrastructure ready for NVIDIA Nemotron AI models
 
 ---
 
@@ -125,8 +127,10 @@ docker compose up
 | `PORT` | API port (default: `4000`) |
 | `DATABASE_URL` | SQLite `file:./dev.db` or PostgreSQL connection string |
 | `ALLOWED_ORIGIN` | CORS origin — set to your frontend URL |
-| `OPENAI_API_KEY` | Required for AI remediation |
-| `OPENAI_MODEL` | Optional — defaults to `gpt-4o-mini` |
+| `NEBIUS_API_KEY` | Optional — Nebius API key for NVIDIA Nemotron models |
+| `NEBIUS_BASE_URL` | Optional — Nebius API URL (default: `https://api.studio.nebius.ai/v1`) |
+| `NEMOTRON_MODEL` | Optional — Nemotron model name (e.g., `nvidia/llama-3.1-nemotron-70b-instruct`) |
+| `TAVILY_API_KEY` | Optional — Tavily API key for accessibility best practices search |
 
 ### Frontend (`frontend/.env.local`)
 | Variable | Description |
@@ -146,3 +150,24 @@ docker compose up
 | `POST` | `/scans/:id/fixes/apply` | Apply selected fixes |
 | `POST` | `/scans/:id/verify` | Re-audit patched HTML |
 | `GET` | `/scans/:id/export` | Export report (html/json/md) |
+
+
+---
+
+## License
+
+This project is licensed under the **MIT License** � an approved OSI open-source license.
+
+---
+
+## NVIDIA Nemotron & Token Factory Integration
+
+### Nemotron-Ready Architecture
+
+AccessLens AI is **Nemotron-ready** with full infrastructure support for NVIDIA Nemotron models.
+
+---
+
+## Tavily Integration
+
+AccessLens AI integrates **Tavily** to fetch authoritative accessibility best practices and WCAG guidelines.

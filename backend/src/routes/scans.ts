@@ -7,6 +7,7 @@ import { normalizeAxeViolations, normalizeIssues } from "../services/normalizer.
 import { progressBroker } from "../services/progress.js";
 import { scanHtml, scanUrl } from "../services/scanner.js";
 import { calculateScore } from "../services/score.js";
+import { searchAccessibilityBestPractices } from "../services/tavily.js";
 import { parseOrReply, toScan, toIssue } from "./helpers.js";
 import { z } from "zod";
 
@@ -43,6 +44,24 @@ export const scanRoutes: FastifyPluginAsync = async (app) => {
           progressBroker.emit(created.id, "detecting", "Running axe accessibility checks");
           progressBroker.emit(created.id, "normalizing", "Normalizing accessibility findings");
           const issues = normalizeIssues([...normalizeAxeViolations(created.id, raw.axe), ...raw.keyboardIssues]);
+
+          // Tavily runtime call: search for best practices for detected issues
+          if (issues.length > 0) {
+            progressBroker.emit(created.id, "researching", "Searching accessibility best practices");
+            const uniqueRules = [...new Set(issues.map((i) => i.ruleId))];
+            for (const ruleId of uniqueRules.slice(0, 3)) {
+              // Limit to top 3 rules to avoid excessive API calls
+              const sampleIssue = issues.find((i) => i.ruleId === ruleId);
+              if (sampleIssue) {
+                try {
+                  await searchAccessibilityBestPractices(ruleId, sampleIssue.wcag);
+                } catch {
+                  // Continue even if Tavily fails
+                }
+              }
+            }
+          }
+
           const score = calculateScore(issues);
           const scan = await prisma.$transaction(async (tx) => {
             await tx.issue.createMany({

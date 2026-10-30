@@ -65,7 +65,7 @@ AccessLens AI is a full-stack accessibility testing tool that combines:
 |---|---|
 | **Frontend** | Next.js 14, TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, Monaco Editor |
 | **Backend** | Fastify, TypeScript, Prisma ORM, axe-core, Playwright |
-| **AI** | OpenAI GPT-4o / GPT-4o-mini |
+| **AI** | NVIDIA Nemotron / OpenAI GPT-4o / GPT-4o-mini |
 | **Database** | SQLite (dev) · PostgreSQL (prod) |
 | **Accessibility Engine** | axe-core WCAG 2.2 + Playwright keyboard simulation |
 
@@ -114,6 +114,65 @@ npm run dev
 # From project root
 docker compose up
 ```
+
+---
+
+## License
+
+This project is licensed under the **MIT License** — an approved OSI open-source license.
+
+```
+MIT License
+
+Copyright (c) 2026 AccessLens AI Contributors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+## NVIDIA Nemotron & Token Factory Integration
+
+### NVIDIA Nemotron Usage
+
+AccessLens AI leverages **NVIDIA Nemotron** models for advanced accessibility remediation tasks:
+
+- **Code Context Understanding**: Nemotron's strong code comprehension capabilities enable the system to understand complex HTML structures and generate contextually appropriate accessibility fixes
+- **Minimal Patch Generation**: The model is optimized to produce minimal, targeted fixes rather than rewriting entire code sections, ensuring safer and more maintainable changes
+- **Multi-Language Support**: Nemotron's training on diverse codebases allows it to handle various web frameworks and coding patterns in accessibility remediation
+
+### Token Factory Acceleration
+
+**Token Factory** significantly accelerated our development workflow in the following areas:
+
+1. **Rapid Prototyping**: Enabled quick iteration on AI remediation prompts and strategies by providing immediate feedback on token usage and costs
+2. **Cost Optimization**: Real-time token tracking helped optimize the balance between model performance and operational costs for large-scale accessibility audits
+3. **Prompt Engineering**: Streamlined the process of fine-tuning prompts for different accessibility rule categories (WCAG 2.2 levels A, AA, AAA)
+4. **Batch Processing**: Accelerated testing of remediation strategies across multiple violation types simultaneously
+
+### Nebius Tools & Services
+
+The following Nebius Tools and Services were utilized in the development of AccessLens AI:
+
+- **GPU-Accelerated Inference**: Used Nebius GPU infrastructure for faster model inference during the development and testing phases
+- **Model Hosting**: Leveraged Nebius cloud services for hosting and scaling the AI remediation service
+- **Development Environment**: Nebius development tools facilitated efficient model integration and testing workflows
 
 ---
 

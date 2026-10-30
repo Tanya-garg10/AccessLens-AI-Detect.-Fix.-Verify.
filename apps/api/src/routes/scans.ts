@@ -12,18 +12,8 @@ import { parseOrReply, toScan, toIssue } from "./helpers.js";
 const scanQueue = new PQueue({ concurrency: 2 });
 
 export const scanRoutes: FastifyPluginAsync = async (app) => {
-  app.post(
-    "/api/scans",
-    {
-      config: {
-        rateLimit: {
-          max: 10,
-          timeWindow: "1 minute",
-        },
-      },
-    },
-    async (request, reply) => {
-      const input = parseOrReply(createScanRequestSchema, request.body, reply);
+  const createHandler = async (request: import("fastify").FastifyRequest, reply: import("fastify").FastifyReply) => {
+    const input = parseOrReply(createScanRequestSchema, request.body, reply);
       if (!input) return;
       if (input.html && Buffer.byteLength(input.html, "utf8") > 500 * 1024) {
         throw new ValidationError("Pasted HTML must be 500KB or smaller");
@@ -68,10 +58,86 @@ export const scanRoutes: FastifyPluginAsync = async (app) => {
 
       const response = createScanResponseSchema.parse({ scan: toScan(result) });
       return reply.code(201).send(response);
-    }
-  );
+    };
 
-  app.get("/api/scans/:id", async (request, reply) => {
+  app.post("/api/scans", { config: { rateLimit: { max: 10, timeWindow: "1 minute" } } }, createHandler);
+  app.post("/api/audits", { config: { rateLimit: { max: 10, timeWindow: "1 minute" } } }, createHandler);
+
+  const listHandler = async (_request: import("fastify").FastifyRequest, _reply: import("fastify").FastifyReply) => {
+    const records = await prisma.scan.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: {
+        issues: {
+          select: {
+            id: true,
+            impact: true,
+            status: true,
+          },
+        },
+      },
+    });
+
+    let totalIssues = 0;
+    let totalVerified = 0;
+    let criticalCount = 0;
+    let seriousCount = 0;
+    let moderateCount = 0;
+    let minorCount = 0;
+    let totalScoreSum = 0;
+
+    const audits = records.map((record) => {
+      totalScoreSum += record.score;
+      const issuesCount = record.issues.length;
+      const fixedCount = record.issues.filter((i) => i.status === "fixed").length;
+      const critical = record.issues.filter((i) => i.impact === "critical").length;
+      const serious = record.issues.filter((i) => i.impact === "serious").length;
+      const moderate = record.issues.filter((i) => i.impact === "moderate").length;
+      const minor = record.issues.filter((i) => i.impact === "minor").length;
+
+      totalIssues += issuesCount;
+      totalVerified += fixedCount;
+      criticalCount += critical;
+      seriousCount += serious;
+      moderateCount += moderate;
+      minorCount += minor;
+
+      return {
+        id: record.id,
+        inputType: record.inputType as "url" | "html",
+        ...(record.url ? { url: record.url } : {}),
+        score: record.score,
+        createdAt: record.createdAt.toISOString(),
+        issuesCount,
+        fixedCount,
+        criticalCount: critical,
+        seriousCount: serious,
+        moderateCount: moderate,
+        minorCount: minor,
+      };
+    });
+
+    const averageScore = records.length > 0 ? Math.round(totalScoreSum / records.length) : 100;
+
+    return {
+      totalAudits: records.length,
+      totalIssues,
+      totalVerified,
+      averageScore,
+      severityCounts: {
+        critical: criticalCount,
+        serious: seriousCount,
+        moderate: moderateCount,
+        minor: minorCount,
+      },
+      audits,
+    };
+  };
+
+  app.get("/api/scans", listHandler);
+  app.get("/api/audits", listHandler);
+
+  const getHandler = async (request: import("fastify").FastifyRequest, reply: import("fastify").FastifyReply) => {
     const params = parseOrReply(getScanParamsSchema, request.params, reply);
     if (!params) return;
     const record = await prisma.scan.findUnique({ where: { id: params.id }, include: { issues: { include: { fixes: true } } } });
@@ -81,9 +147,12 @@ export const scanRoutes: FastifyPluginAsync = async (app) => {
       issues: record.issues.map(toIssue),
       fixes: record.issues.flatMap((issue) => issue.fixes).map((fix) => ({ ...fix, confidence: fix.confidence })),
     });
-  });
+  };
 
-  app.get("/api/scans/:id/stream", async (request, reply) => {
+  app.get("/api/scans/:id", getHandler);
+  app.get("/api/audits/:id", getHandler);
+
+  const streamHandler = async (request: import("fastify").FastifyRequest, reply: import("fastify").FastifyReply) => {
     const params = parseOrReply(getScanParamsSchema, request.params, reply);
     if (!params) return;
     const scan = await prisma.scan.findUnique({ where: { id: params.id }, select: { id: true } });
@@ -95,5 +164,8 @@ export const scanRoutes: FastifyPluginAsync = async (app) => {
       reply.raw.write(`event: ${event.event}\ndata: ${JSON.stringify(event.data)}\n\n`);
     });
     request.raw.once("close", () => unsubscribe());
-  });
+  };
+
+  app.get("/api/scans/:id/stream", streamHandler);
+  app.get("/api/audits/:id/stream", streamHandler);
 };

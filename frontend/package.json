@@ -1,5 +1,5 @@
 {
-  "name": "accesslens-frontend",
+  "name": "@accesslens/web",
   "version": "0.1.0",
   "private": true,
   "description": "AccessLens AI — Next.js 14 frontend (Detect. Fix. Verify.)",

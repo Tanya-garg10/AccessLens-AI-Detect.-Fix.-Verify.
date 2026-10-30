@@ -86,12 +86,27 @@ export function buildApp() {
   // Root and Healthcheck endpoints
   app.get("/", async () => ({
     name: "AccessLens API",
+    tagline: "Detect. Fix. Verify. Build for Everyone.",
     status: "ok",
     frontend: "http://localhost:3000",
-    health: "/health",
+    health: "/api/health",
     demo: "/demo/broken-site.html",
+    aiProvider: "Nebius Token Factory / Nebius AI Cloud",
+    aiModel: env.NEMOTRON_MODEL ?? "nvidia/llama-3.1-nemotron-70b-instruct",
+    aiConfigured: Boolean(env.NEBIUS_API_KEY && env.NEBIUS_BASE_URL && env.NEMOTRON_MODEL),
   }));
-  app.get("/health", async () => healthResponseSchema.parse({ status: "ok" }));
+
+  const getHealth = async () =>
+    healthResponseSchema.parse({
+      status: "ok",
+      version: "1.0.0",
+      aiConfigured: Boolean(env.NEBIUS_API_KEY && env.NEBIUS_BASE_URL && env.NEMOTRON_MODEL),
+      aiProvider: "Nebius Token Factory / Nebius AI Cloud",
+      aiModel: env.NEMOTRON_MODEL ?? "nvidia/llama-3.1-nemotron-70b-instruct",
+    });
+
+  app.get("/health", getHealth);
+  app.get("/api/health", getHealth);
 
   // Statically serve demo/ directory at /demo/*
   const demoDir = getDemoDir();

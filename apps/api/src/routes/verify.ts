@@ -8,7 +8,7 @@ import { calculateScore } from "../services/score.js";
 import { parseOrReply, toIssue, toScan } from "./helpers.js";
 
 export const verifyRoutes: FastifyPluginAsync = async (app) => {
-  app.post("/api/scans/:id/verify", async (request, reply) => {
+  const verifyHandler = async (request: import("fastify").FastifyRequest, reply: import("fastify").FastifyReply) => {
     const params = parseOrReply(getScanParamsSchema, request.params, reply);
     if (!params) return;
     const body = parseOrReply(verifyScanRequestSchema, request.body, reply);
@@ -82,5 +82,9 @@ export const verifyRoutes: FastifyPluginAsync = async (app) => {
       issues: updatedIssues.map(toIssue),
       verified: true,
     });
-  });
+  };
+
+  app.post("/api/scans/:id/verify", verifyHandler);
+  app.post("/api/audits/:id/verify", verifyHandler);
+  app.post("/api/audits/:id/issues/:issueId/verify", verifyHandler);
 };

@@ -232,7 +232,15 @@ function ScanReportContent() {
             className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-3.5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-visible:ring-2 focus-visible:ring-ring dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200"
           >
             <FileCode className="h-3.5 w-3.5" aria-hidden="true" />
-            View diff
+            Fix Workspace
+          </Link>
+
+          <Link
+            href={`/reports/${scanId}`}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3.5 py-2 text-sm font-medium text-foreground shadow-sm transition hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <FileCheck2 className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+            Export Report
           </Link>
         </div>
       </div>

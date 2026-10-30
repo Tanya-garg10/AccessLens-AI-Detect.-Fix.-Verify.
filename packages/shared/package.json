@@ -9,5 +9,7 @@
     "lint": "eslint src",
     "dev": "tsc --noEmit --watch"
   },
-  "dependencies": { "zod": "^3.24.1" }
+  "dependencies": {
+    "zod": "^3.24.1"
+  }
 }

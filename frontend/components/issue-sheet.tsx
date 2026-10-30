@@ -7,7 +7,7 @@ import { api } from "@/lib/api";
 
 interface IssueSheetProps {
   issue: Issue | null;
-  fix?: Fix;
+  fix?: Fix | null | undefined;
   scanId: string;
   isOpen: boolean;
   onClose: () => void;

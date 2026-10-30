@@ -1,11 +1,14 @@
 import type { FastifyPluginAsync } from "fastify";
-import { getScanParamsSchema, verifyScanRequestSchema, verifyScanResponseSchema } from "@accesslens/shared";
+import { verifyScanRequestSchema, verifyScanResponseSchema } from "@accesslens/shared";
 import { prisma } from "../lib/prisma.js";
 import { normalizeAxeViolations, normalizeIssues } from "../services/normalizer.js";
 import { progressBroker } from "../services/progress.js";
 import { scanHtml } from "../services/scanner.js";
 import { calculateScore } from "../services/score.js";
 import { parseOrReply, toIssue, toScan } from "./helpers.js";
+import { z } from "zod";
+
+const getScanParamsSchema = z.object({ id: z.string().min(1) });
 
 export const verifyRoutes: FastifyPluginAsync = async (app) => {
   app.post("/api/scans/:id/verify", async (request, reply) => {

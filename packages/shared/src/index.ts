@@ -5,7 +5,41 @@ export const issueSourceSchema = z.enum(["axe", "custom"]);
 export const issueStatusSchema = z.enum(["open", "fixed", "unverified", "manual"]);
 export const scanInputTypeSchema = z.enum(["url", "html"]);
 export const exportFormatSchema = z.enum(["html", "json", "md"]);
-export const healthResponseSchema = z.object({ status: z.literal("ok") });
+export const healthResponseSchema = z.object({
+  status: z.literal("ok"),
+  version: z.string().optional(),
+  aiConfigured: z.boolean().optional(),
+  aiProvider: z.string().optional(),
+  aiModel: z.string().optional(),
+});
+
+export const auditSummaryItemSchema = z.object({
+  id: z.string(),
+  inputType: scanInputTypeSchema,
+  url: z.string().optional(),
+  score: z.number(),
+  createdAt: z.string(),
+  issuesCount: z.number(),
+  fixedCount: z.number(),
+  criticalCount: z.number(),
+  seriousCount: z.number(),
+  moderateCount: z.number(),
+  minorCount: z.number(),
+});
+
+export const listAuditsResponseSchema = z.object({
+  totalAudits: z.number(),
+  totalIssues: z.number(),
+  totalVerified: z.number(),
+  averageScore: z.number(),
+  severityCounts: z.object({
+    critical: z.number(),
+    serious: z.number(),
+    moderate: z.number(),
+    minor: z.number(),
+  }),
+  audits: z.array(auditSummaryItemSchema),
+});
 
 export const issueSchema = z.object({
   id: z.string(),
@@ -114,4 +148,7 @@ export type VerifyScanResponse = z.infer<typeof verifyScanResponseSchema>;
 export type ExplainIssueRequest = z.infer<typeof explainIssueRequestSchema>;
 export type ExplainIssueResponse = z.infer<typeof explainIssueResponseSchema>;
 export type ExportScanResponse = z.infer<typeof exportScanResponseSchema>;
+export type AuditSummaryItem = z.infer<typeof auditSummaryItemSchema>;
+export type ListAuditsResponse = z.infer<typeof listAuditsResponseSchema>;
+export type HealthResponse = z.infer<typeof healthResponseSchema>;
 

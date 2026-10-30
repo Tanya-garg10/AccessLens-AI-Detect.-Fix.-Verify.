@@ -32,32 +32,38 @@ export function Header() {
         </Link>
 
         {/* Nav */}
-        <nav aria-label="Primary navigation" className="flex items-center gap-1">
-          {!isHome && (
-            <Link
-              href="/"
-              className="rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              New Scan
-            </Link>
-          )}
-          <a
-            href="https://www.w3.org/WAI/standards-guidelines/wcag/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring sm:block"
+        <nav aria-label="Primary navigation" className="flex items-center gap-1.5 sm:gap-2">
+          <Link
+            href="/dashboard"
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring ${
+              pathname === "/dashboard" ? "bg-muted text-foreground font-semibold" : "text-muted-foreground"
+            }`}
           >
-            WCAG 2.2
-          </a>
-          <a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="View source on GitHub"
-            className="flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
+            Dashboard
+          </Link>
+          <Link
+            href="/audit/new"
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring ${
+              pathname === "/audit/new" ? "bg-muted text-foreground font-semibold" : "text-muted-foreground"
+            }`}
           >
-            <Github className="h-4 w-4" aria-hidden="true" />
-          </a>
+            New Audit
+          </Link>
+          <Link
+            href="/settings"
+            className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring ${
+              pathname === "/settings" ? "bg-muted text-foreground font-semibold" : "text-muted-foreground"
+            }`}
+          >
+            Settings
+          </Link>
+          <div className="hidden h-4 w-px bg-border sm:block" aria-hidden="true" />
+          <Link
+            href="/audit/new"
+            className="hidden items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm shadow-indigo-500/20 transition hover:bg-indigo-500 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 md:inline-flex"
+          >
+            Start Free Audit
+          </Link>
           <div className="ml-1 h-4 w-px bg-border" aria-hidden="true" />
           <div className="ml-1">
             <ThemeToggle />

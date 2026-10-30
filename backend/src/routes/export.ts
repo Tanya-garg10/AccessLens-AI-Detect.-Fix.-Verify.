@@ -1,6 +1,9 @@
 import type { FastifyPluginAsync } from "fastify";
-import { exportFormatSchema, exportScanQuerySchema, exportScanResponseSchema, getScanParamsSchema } from "@accesslens/shared";
+import { exportFormatSchema, exportScanQuerySchema, exportScanResponseSchema } from "@accesslens/shared";
 import { prisma } from "../lib/prisma.js";
+import { z } from "zod";
+
+const getScanParamsSchema = z.object({ id: z.string().min(1) });
 import { parseOrReply, toIssue, toScan } from "./helpers.js";
 
 export const exportRoutes: FastifyPluginAsync = async (app) => {

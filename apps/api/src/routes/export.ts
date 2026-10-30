@@ -1,13 +1,19 @@
 import type { FastifyPluginAsync } from "fastify";
-import { exportFormatSchema, exportScanQuerySchema, exportScanResponseSchema, getScanParamsSchema } from "@accesslens/shared";
+import { exportFormatSchema, exportScanQuerySchema, exportScanResponseSchema } from "@accesslens/shared";
 import { prisma } from "../lib/prisma.js";
 import { parseOrReply, toIssue, toScan } from "./helpers.js";
+import { z } from "zod";
+
+const getScanParamsSchema = z.object({ id: z.string().min(1) });
 
 export const exportRoutes: FastifyPluginAsync = async (app) => {
-  app.get("/api/scans/:id/export", async (request, reply) => {
+  const exportHandler = async (request: import("fastify").FastifyRequest, reply: import("fastify").FastifyReply) => {
     const params = parseOrReply(getScanParamsSchema, request.params, reply);
     if (!params) return;
-    const query = parseOrReply(exportScanQuerySchema, request.query, reply);
+
+    const queryObj = (request.query as { format?: "html" | "json" | "md" } | undefined) ?? {};
+    const format = queryObj.format || "html";
+    const query = parseOrReply(exportScanQuerySchema, { format }, reply);
     if (!query) return;
 
     const record = await prisma.scan.findUnique({
@@ -157,5 +163,9 @@ ${issue.html.slice(0, 500)}
       format: query.format,
       content,
     });
-  });
+  };
+
+  app.get("/api/scans/:id/export", exportHandler);
+  app.get("/api/audits/:id/export", exportHandler);
+  app.get("/api/audits/:id/report", exportHandler);
 };

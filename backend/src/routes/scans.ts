@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from "fastify";
 import PQueue from "p-queue";
-import { createScanRequestSchema, createScanResponseSchema, getScanParamsSchema, getScanResponseSchema } from "@accesslens/shared";
+import { createScanRequestSchema, createScanResponseSchema, getScanResponseSchema } from "@accesslens/shared";
 import { prisma } from "../lib/prisma.js";
 import { ValidationError } from "../lib/errors.js";
 import { normalizeAxeViolations, normalizeIssues } from "../services/normalizer.js";
@@ -8,6 +8,9 @@ import { progressBroker } from "../services/progress.js";
 import { scanHtml, scanUrl } from "../services/scanner.js";
 import { calculateScore } from "../services/score.js";
 import { parseOrReply, toScan, toIssue } from "./helpers.js";
+import { z } from "zod";
+
+const getScanParamsSchema = z.object({ id: z.string().min(1) });
 
 const scanQueue = new PQueue({ concurrency: 2 });
 

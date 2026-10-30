@@ -12,11 +12,15 @@ import {
   getScanResponseSchema,
   verifyScanRequestSchema,
   verifyScanResponseSchema,
+  listAuditsResponseSchema,
+  healthResponseSchema,
   type ApplyFixesResponse,
   type CreateScanRequest,
   type CreateScanResponse,
   type GetScanResponse,
   type VerifyScanResponse,
+  type ListAuditsResponse,
+  type HealthResponse,
 } from "@accesslens/shared";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
@@ -131,6 +135,18 @@ export const api = {
       throw new Error(`Failed to load demo HTML: ${response.statusText}`);
     }
     return response.text();
+  },
+
+  async listAudits(): Promise<ListAuditsResponse> {
+    return request("/api/audits", {
+      method: "GET",
+    }, listAuditsResponseSchema);
+  },
+
+  async getHealth(): Promise<HealthResponse> {
+    return request("/api/health", {
+      method: "GET",
+    }, healthResponseSchema);
   },
 
   getStreamUrl(scanId: string): string {

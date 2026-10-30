@@ -19,7 +19,7 @@ import { gatherIssueContext, type IssueContext } from "../services/scanner.js";
 import { parseOrReply, toIssue, toScan } from "./helpers.js";
 
 export const fixRoutes: FastifyPluginAsync = async (app) => {
-  app.post("/api/scans/:id/fixes", async (request, reply) => {
+  const generateFixesHandler = async (request: import("fastify").FastifyRequest, reply: import("fastify").FastifyReply) => {
     const params = parseOrReply(getScanParamsSchema, request.params, reply);
     if (!params) return;
     const body = parseOrReply(generateFixesRequestSchema, request.body, reply);
@@ -88,9 +88,17 @@ export const fixRoutes: FastifyPluginAsync = async (app) => {
 
     progressBroker.emit(scan.id, "done", `Generated ${fixes.length} fixes`);
     return generateFixesResponseSchema.parse({ scanId: scan.id, fixes });
+  };
+
+  app.post("/api/scans/:id/fixes", generateFixesHandler);
+  app.post("/api/audits/:id/fixes", generateFixesHandler);
+  app.post("/api/audits/:id/issues/:issueId/suggest-fix", async (request, reply) => {
+    const params = request.params as { id: string; issueId: string };
+    request.body = { issueIds: [params.issueId] };
+    return generateFixesHandler(request, reply);
   });
 
-  app.post("/api/scans/:id/apply", async (request, reply) => {
+  const applyFixesHandler = async (request: import("fastify").FastifyRequest, reply: import("fastify").FastifyReply) => {
     const params = parseOrReply(getScanParamsSchema, request.params, reply);
     if (!params) return;
     const body = parseOrReply(applyFixesRequestSchema, request.body, reply);
@@ -144,16 +152,33 @@ export const fixRoutes: FastifyPluginAsync = async (app) => {
       scan: toScan(updatedScan),
       appliedFixIds,
     });
+  };
+
+  app.post("/api/scans/:id/apply", applyFixesHandler);
+  app.post("/api/audits/:id/apply", applyFixesHandler);
+  app.post("/api/audits/:id/issues/:issueId/apply-fix", async (request, reply) => {
+    const params = request.params as { id: string; issueId: string };
+    const issue = await prisma.issue.findUnique({ where: { id: params.issueId }, include: { fixes: true } });
+    if (!issue || issue.fixes.length === 0) {
+      return reply.code(404).send({ error: "NOT_FOUND", message: "No fixes found for this issue" });
+    }
+    request.body = { fixIds: issue.fixes.map((f) => f.id) };
+    return applyFixesHandler(request, reply);
   });
 
-  app.post("/api/scans/:id/explain", async (request, reply) => {
+  const explainHandler = async (request: import("fastify").FastifyRequest, reply: import("fastify").FastifyReply) => {
     const params = parseOrReply(getScanParamsSchema, request.params, reply);
     if (!params) return;
-    const body = parseOrReply(explainIssueRequestSchema, request.body, reply);
-    if (!body) return;
+    const routeParams = request.params as { issueId?: string };
+    const requestBody = (request.body as { issueId?: string } | undefined) ?? {};
+    const issueId = requestBody.issueId || routeParams.issueId;
+
+    if (!issueId) {
+      return reply.code(400).send({ error: "VALIDATION_ERROR", message: "issueId is required" });
+    }
 
     const issueRecord = await prisma.issue.findUnique({
-      where: { id: body.issueId },
+      where: { id: issueId },
     });
     if (!issueRecord || issueRecord.scanId !== params.id) {
       return reply.code(404).send({ error: "NOT_FOUND", message: "Issue not found" });
@@ -161,5 +186,9 @@ export const fixRoutes: FastifyPluginAsync = async (app) => {
 
     const explanation = await explainIssue(toIssue(issueRecord));
     return explainIssueResponseSchema.parse({ explanation });
-  });
+  };
+
+  app.post("/api/scans/:id/explain", explainHandler);
+  app.post("/api/audits/:id/explain", explainHandler);
+  app.post("/api/audits/:id/issues/:issueId/explain", explainHandler);
 };

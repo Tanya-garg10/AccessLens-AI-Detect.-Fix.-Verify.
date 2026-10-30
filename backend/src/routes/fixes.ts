@@ -1,5 +1,7 @@
 import type { FastifyPluginAsync } from "fastify";
 import PQueue from "p-queue";
+import { z } from "zod";
+
 import {
   applyFixesRequestSchema,
   applyFixesResponseSchema,
@@ -7,7 +9,8 @@ import {
   explainIssueResponseSchema,
   generateFixesRequestSchema,
   generateFixesResponseSchema,
-  getScanParamsSchema,
+  // getScanParamsSchema is defined locally to avoid missing export
+  // issueSchema remains imported
   issueSchema,
   type Fix,
   type Issue,
@@ -20,7 +23,8 @@ import { parseOrReply, toIssue, toScan } from "./helpers.js";
 
 export const fixRoutes: FastifyPluginAsync = async (app) => {
   app.post("/api/scans/:id/fixes", async (request, reply) => {
-    const params = parseOrReply(getScanParamsSchema, request.params, reply);
+    const getScanParamsSchema = z.object({ id: z.string().min(1) });
+  const params = parseOrReply(getScanParamsSchema, request.params, reply);
     if (!params) return;
     const body = parseOrReply(generateFixesRequestSchema, request.body, reply);
     if (!body) return;

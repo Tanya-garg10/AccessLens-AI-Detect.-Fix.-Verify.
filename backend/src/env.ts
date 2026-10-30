@@ -12,6 +12,7 @@ const envSchema = z.object({
   NEBIUS_API_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
   NEBIUS_BASE_URL: z.preprocess(emptyToUndefined, z.string().url().optional()),
   NEMOTRON_MODEL: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
+  TAVILY_API_KEY: z.preprocess(emptyToUndefined, z.string().min(1).optional()),
   PORT: z.coerce.number().int().positive().default(4000),
   DATABASE_URL: z.string().min(1).default("file:./dev.db"),
   ALLOWED_ORIGIN: z.string().url().default("http://localhost:3000"),

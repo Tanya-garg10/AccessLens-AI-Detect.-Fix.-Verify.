@@ -1,11 +1,11 @@
 version: "3.8"
 
 services:
-  api:
+  backend:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
-    container_name: accesslens-api
+      dockerfile: backend/Dockerfile
+    container_name: accesslens-backend
     ports:
       - "4000:4000"
     environment:
@@ -16,6 +16,7 @@ services:
       - NEBIUS_API_KEY=${NEBIUS_API_KEY:-}
       - NEBIUS_BASE_URL=${NEBIUS_BASE_URL:-}
       - NEMOTRON_MODEL=${NEMOTRON_MODEL:-}
+      - TAVILY_API_KEY=${TAVILY_API_KEY:-}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
       interval: 15s
@@ -24,16 +25,16 @@ services:
       start_period: 5s
     restart: unless-stopped
 
-  web:
+  frontend:
     build:
       context: .
-      dockerfile: apps/web/Dockerfile
-    container_name: accesslens-web
+      dockerfile: frontend/Dockerfile
+    container_name: accesslens-frontend
     ports:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://localhost:4000
     depends_on:
-      api:
+      backend:
         condition: service_healthy
     restart: unless-stopped

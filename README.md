@@ -56,6 +56,8 @@ AccessLens AI is a full-stack accessibility testing tool that combines:
 - **Live SSE progress** — real-time scan pipeline updates
 - **Export** — HTML, JSON, Markdown reports
 - **Full accessibility** — WCAG 2.2 compliant UI with skip link, aria-live regions, 4.5:1 contrast
+- **Tavily-powered best practices** — authoritative WCAG guidelines from real-time web search
+- **Nemotron-ready architecture** — infrastructure ready for NVIDIA Nemotron AI models
 
 ---
 
@@ -149,30 +151,53 @@ SOFTWARE.
 
 ## NVIDIA Nemotron & Token Factory Integration
 
-### NVIDIA Nemotron Usage
+### Nemotron-Ready Architecture
 
-AccessLens AI leverages **NVIDIA Nemotron** models for advanced accessibility remediation tasks:
+AccessLens AI is **Nemotron-ready** with full infrastructure support for NVIDIA Nemotron models. The system is architected to leverage Nemotron when configured:
 
-- **Code Context Understanding**: Nemotron's strong code comprehension capabilities enable the system to understand complex HTML structures and generate contextually appropriate accessibility fixes
-- **Minimal Patch Generation**: The model is optimized to produce minimal, targeted fixes rather than rewriting entire code sections, ensuring safer and more maintainable changes
-- **Multi-Language Support**: Nemotron's training on diverse codebases allows it to handle various web frameworks and coding patterns in accessibility remediation
+- **Code Context Understanding**: Nemotron's strong code comprehension enables understanding complex HTML structures and generating contextually appropriate accessibility fixes
+- **Minimal Patch Generation**: The model is optimized to produce minimal, targeted fixes rather than rewriting entire code sections
+- **Multi-Language Support**: Nemotron's training on diverse codebases allows handling various web frameworks and coding patterns
 
-### Token Factory Acceleration
+**Current Status**: The infrastructure is fully implemented in `backend/src/lib/llm.ts` and `backend/src/services/remediation.ts` with environment variable configuration. When `NEBIUS_API_KEY` is provided, the system automatically uses Nemotron for AI-powered remediation. Without credentials, it gracefully falls back to deterministic rule-based fixes.
 
-**Token Factory** significantly accelerated our development workflow in the following areas:
+### Token Factory Integration
 
-1. **Rapid Prototyping**: Enabled quick iteration on AI remediation prompts and strategies by providing immediate feedback on token usage and costs
-2. **Cost Optimization**: Real-time token tracking helped optimize the balance between model performance and operational costs for large-scale accessibility audits
-3. **Prompt Engineering**: Streamlined the process of fine-tuning prompts for different accessibility rule categories (WCAG 2.2 levels A, AA, AAA)
-4. **Batch Processing**: Accelerated testing of remediation strategies across multiple violation types simultaneously
+**Token Factory** infrastructure is integrated to accelerate development workflows:
+
+1. **Rapid Prototyping**: Ready for quick iteration on AI remediation prompts with token usage tracking
+2. **Cost Optimization**: Infrastructure prepared for monitoring token costs in large-scale accessibility audits
+3. **Prompt Engineering**: System designed for fine-tuning prompts across WCAG 2.2 rule categories
+4. **Batch Processing**: Batch fix generation capability for processing multiple violations simultaneously
 
 ### Nebius Tools & Services
 
-The following Nebius Tools and Services were utilized in the development of AccessLens AI:
+The following Nebius infrastructure is configured and ready:
 
-- **GPU-Accelerated Inference**: Used Nebius GPU infrastructure for faster model inference during the development and testing phases
-- **Model Hosting**: Leveraged Nebius cloud services for hosting and scaling the AI remediation service
-- **Development Environment**: Nebius development tools facilitated efficient model integration and testing workflows
+- **GPU-Accelerated Inference**: Ready to use Nebius GPU infrastructure for faster model inference
+- **Model Hosting**: Configured to leverage Nebius cloud services for hosting the AI remediation service
+- **API Integration**: OpenAI-compatible API client implementation via Nebius AI Cloud (`https://api.studio.nebius.ai/v1`)
+
+**Note**: To activate Nemotron inference, set `NEBIUS_API_KEY` in `.env`. The system will automatically detect credentials and switch from deterministic fallbacks to AI-powered remediation.
+
+---
+
+## Tavily Integration
+
+AccessLens AI integrates **Tavily** to fetch authoritative accessibility best practices and WCAG guidelines:
+
+- **WCAG Guideline Search**: Automatically searches for official WCAG explanations when explaining accessibility issues
+- **Best Practices Enhancement**: Enhances AI remediation with real-world best practices from authoritative sources
+- **Authoritative Sources**: Pulls information from W3C, WebAIM, and other accessibility authorities
+- **Runtime Integration**: Tavily API is called at runtime during issue explanation and fix generation
+
+### How Tavily is Used
+
+1. **Issue Explanation**: When explaining an accessibility issue, Tavily searches for authoritative WCAG guideline explanations
+2. **Fix Enhancement**: Before generating AI fixes, Tavily retrieves best practices to inform the remediation
+3. **Fallback Graceful**: If Tavily API key is not configured, the system uses deterministic explanations and fixes
+
+**Configuration**: Set `TAVILY_API_KEY` in `.env` to enable Tavily integration. Get a free API key at [tavily.com](https://tavily.com).
 
 ---
 
@@ -184,8 +209,10 @@ The following Nebius Tools and Services were utilized in the development of Acce
 | `PORT` | API port (default: `4000`) |
 | `DATABASE_URL` | SQLite `file:./dev.db` or PostgreSQL connection string |
 | `ALLOWED_ORIGIN` | CORS origin — set to your frontend URL |
-| `OPENAI_API_KEY` | Required for AI remediation |
-| `OPENAI_MODEL` | Optional — defaults to `gpt-4o-mini` |
+| `NEBIUS_API_KEY` | Optional — Nebius API key for NVIDIA Nemotron models |
+| `NEBIUS_BASE_URL` | Optional — Nebius API URL (default: `https://api.studio.nebius.ai/v1`) |
+| `NEMOTRON_MODEL` | Optional — Nemotron model name (e.g., `nvidia/llama-3.1-nemotron-70b-instruct`) |
+| `TAVILY_API_KEY` | Optional — Tavily API key for accessibility best practices search |
 
 ### Frontend (`frontend/.env.local`)
 | Variable | Description |

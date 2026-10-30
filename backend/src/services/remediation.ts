@@ -5,6 +5,7 @@ import { llmContrastSuggestionSchema, llmRemediationBatchSchema, llmRemediationS
 import { env } from "../env.js";
 import { requestJson } from "../lib/llm.js";
 import { ensureContrast } from "./contrast.js";
+import { getWCAGGuidelineExplanation, searchAccessibilityBestPractices } from "./tavily.js";
 import type { IssueContext } from "./scanner.js";
 
 const systemPrompt = "You are a WCAG 2.2 accessibility remediation expert. Given one issue and its HTML context, return a minimal fix. Preserve visual design and behavior. Prefer native semantic HTML over ARIA. Never remove content. Never invent text content you cannot infer. Respond ONLY with valid JSON.";
@@ -88,12 +89,25 @@ export async function generateFix(issue: Issue, context: IssueContext): Promise<
     }
   }
 
+  // Search Tavily for best practices if configured
+  let bestPractices: string[] = [];
+  if (env.TAVILY_API_KEY) {
+    try {
+      bestPractices = await searchAccessibilityBestPractices(issue.ruleId, issue.wcag);
+    } catch {
+      // Continue without best practices
+    }
+  }
+
   // Attempt LLM call if configured
   if (env.NEBIUS_API_KEY && env.NEBIUS_BASE_URL && env.NEMOTRON_MODEL) {
     let validationError = "";
     for (let attempt = 0; attempt < 2; attempt += 1) {
       try {
-        return applyReviewPolicy(issue, await requestJson(systemPrompt, `${prompt(issue, context)}${validationError}`, llmRemediationSchema));
+        const enhancedPrompt = bestPractices.length > 0
+          ? `${prompt(issue, context)}\n\nBest practices from authoritative sources:\n${bestPractices.join("\n")}`
+          : prompt(issue, context);
+        return applyReviewPolicy(issue, await requestJson(systemPrompt, `${enhancedPrompt}${validationError}`, llmRemediationSchema));
       } catch (error) {
         if (attempt === 1) break;
         validationError = `\nPrevious response failed validation: ${error instanceof Error ? error.message : "unknown error"}. Return the exact JSON shape.`;
@@ -212,6 +226,21 @@ export async function safeContrastColor(issue: Issue, context: IssueContext): Pr
 const explanationSchema = z.object({ explanation: z.string().min(1) });
 
 export async function explainIssue(issue: Issue): Promise<string> {
+  // Try Tavily first for authoritative WCAG explanations
+  if (env.TAVILY_API_KEY) {
+    try {
+      const wcagExplanation = await getWCAGGuidelineExplanation(issue.wcag);
+      if (wcagExplanation && wcagExplanation.length > 50) {
+        // Combine Tavily result with default explanation
+        const defaultExplain = getDefaultExplanation(issue);
+        return `${defaultExplain}\n\nAuthoritative guidance: ${wcagExplanation.slice(0, 300)}...`;
+      }
+    } catch {
+      // Fall through to other methods
+    }
+  }
+
+  // Try Nemotron if configured
   if (env.NEBIUS_API_KEY && env.NEBIUS_BASE_URL && env.NEMOTRON_MODEL) {
     try {
       const system = "You are an accessibility assistive technology specialist. In EXACTLY THREE sentences, explain why this accessibility barrier matters to a screen reader or keyboard-only user. Keep the explanation empathetic, concrete, and concise. Do not use bullet points, titles, or code blocks.";

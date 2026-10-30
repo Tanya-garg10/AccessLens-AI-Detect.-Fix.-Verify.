@@ -2,12 +2,14 @@
 
 > Detect. Fix. Verify. — AI-powered WCAG 2.2 accessibility agent with deterministic axe-core verification.
 
+AccessLens AI automatically scans web pages for accessibility violations, generates AI-powered fixes, and verifies them with deterministic axe-core audits.
+
 ---
 
 ## Project Structure
 
 ```
-Method-Lens-/
+AccessLens AI/
 ├── frontend/          ◀ Next.js 14 App Router UI  (runs on :3000)
 │   ├── app/           — Pages & layouts (App Router)
 │   ├── components/    — Reusable UI components
@@ -28,6 +30,44 @@ Method-Lens-/
 ├── docs/              — DEMO.md walkthrough script
 └── docker-compose.yml — One-command local dev setup
 ```
+
+---
+
+## Overview
+
+AccessLens AI is a full-stack accessibility testing tool that combines:
+
+- **Automated scanning** using axe-core with 90+ WCAG 2.2 rules
+- **AI-powered remediation** using GPT-4o for contextual fixes
+- **Deterministic verification** with re-auditing to ensure compliance
+- **Keyboard navigation testing** via Playwright simulation
+- **Real-time progress** with Server-Sent Events
+- **Export reports** in HTML, JSON, or Markdown formats
+
+---
+
+## Features
+
+- **Automated WCAG 2.2 scanning** — headless Chromium + axe-core with 90+ rules
+- **Keyboard navigation simulation** — Tab/Shift-Tab traversal via Playwright
+- **AI code remediation** — contextual minimal patches per violation
+- **Deterministic verification** — AI can't self-certify; axe-core re-audits every patch
+- **Monaco diff viewer** — side-by-side original vs. fixed HTML
+- **Live SSE progress** — real-time scan pipeline updates
+- **Export** — HTML, JSON, Markdown reports
+- **Full accessibility** — WCAG 2.2 compliant UI with skip link, aria-live regions, 4.5:1 contrast
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | Next.js 14, TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, Monaco Editor |
+| **Backend** | Fastify, TypeScript, Prisma ORM, axe-core, Playwright |
+| **AI** | OpenAI GPT-4o / GPT-4o-mini |
+| **Database** | SQLite (dev) · PostgreSQL (prod) |
+| **Accessibility Engine** | axe-core WCAG 2.2 + Playwright keyboard simulation |
 
 ---
 
@@ -74,31 +114,6 @@ npm run dev
 # From project root
 docker compose up
 ```
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| **Frontend** | Next.js 14, TypeScript, Tailwind CSS, shadcn/ui, TanStack Query, Monaco Editor |
-| **Backend** | Fastify, TypeScript, Prisma ORM, axe-core, Playwright |
-| **AI** | OpenAI GPT-4o / GPT-4o-mini |
-| **Database** | SQLite (dev) · PostgreSQL (prod) |
-| **Accessibility Engine** | axe-core WCAG 2.2 + Playwright keyboard simulation |
-
----
-
-## Key Features
-
-- **Automated WCAG 2.2 scanning** — headless Chromium + axe-core with 90+ rules
-- **Keyboard navigation simulation** — Tab/Shift-Tab traversal via Playwright
-- **AI code remediation** — contextual minimal patches per violation
-- **Deterministic verification** — AI can't self-certify; axe-core re-audits every patch
-- **Monaco diff viewer** — side-by-side original vs. fixed HTML
-- **Live SSE progress** — real-time scan pipeline updates
-- **Export** — HTML, JSON, Markdown reports
-- **Full accessibility** — WCAG 2.2 compliant UI with skip link, aria-live regions, 4.5:1 contrast
 
 ---
 
